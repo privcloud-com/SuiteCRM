@@ -206,6 +206,72 @@ class PrvCloudMethods
         }
 
     }
+    /******list record bulk*******/
+     public function listBulkRecords($rids,$depth = 0)
+    {
+         if ($this->token)
+        {
+
+            try
+            {
+
+                $res = $this
+                    ->client
+                    ->post("/api/record/bulk/decrypt", [
+
+                'headers' => ['Content-Type' => 'application/json','accept' => 'application/json', 'Authorization' => "Bearer " . $this->token], 'body' => json_encode($rids) ]);
+
+                $response = (array)json_decode($res->getBody()->getContents());
+               
+                /**check if authentication fail try to recreate token****/
+                if (trim($response['code']) == 401)
+                {
+                    if ($depth <= 3)
+                    {
+                        unset($_SESSION["PVT_TOKEN"]);
+                        $GLOBALS["log"]->fatal("Token(" . $this->token . ") not authorized" . var_export($response, true));
+                        $this->listBulkRecords($rids, ++$depth);
+                    }
+                    else
+                    {
+                        $this->RedirectBack($response['message']);
+                    }
+
+                }
+                elseif (isset($response) && !empty($response))
+                {
+                   $GLOBALS["log"]->fatal("Bulk Record loaded successfully  ");
+                   return $response;
+
+                }
+                else
+                {
+                   
+                    $this->RedirectBack($response['message']);
+
+                }
+
+            }
+            catch(RequestException $e)
+            {
+                if ($e->hasResponse())
+                {
+                    $exception = (string)$e->getResponse()
+                        ->getBody();
+                    $exception = json_decode($exception);
+                    $GLOBALS["log"]->fatal("PVT - error " . var_export($exception, true));
+                    return new JsonResponse($exception, $e->getCode());
+                }
+                else
+                {
+                    $GLOBALS["log"]->fatal("PVT = error" . var_export($e, true));
+                    return new JsonResponse($e->getMessage() , 503);
+                }
+
+            }
+        }
+
+    }
     public function deleteRecord($id,$depth = 0){
         $this->setClient();
         /*start httpclient*/
