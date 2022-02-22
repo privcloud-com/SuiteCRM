@@ -27,7 +27,7 @@ class PrvCloudMethods
         {
             session_start();
         }
-        $this->token = $_SESSION["PVT_TOKEN"];
+        $this->token = isset($_SESSION["PVT_TOKEN"]) ? $_SESSION["PVT_TOKEN"] : '';
 
         if (empty($this->token))
         {
@@ -136,7 +136,7 @@ class PrvCloudMethods
             ->getContents());
 
         /**check if authentication fail try to recreate token****/
-        if (trim($response['code']) == 401)
+        if (isset($response['code']) && trim($response['code']) == 401)
         {
             if ($depth <= 3)
             {
@@ -224,7 +224,7 @@ class PrvCloudMethods
                 $response = (array)json_decode($res->getBody()->getContents());
                
                 /**check if authentication fail try to recreate token****/
-                if (trim($response['code']) == 401)
+                if (isset($response['code']) && trim($response['code']) == 401)
                 {
                     if ($depth <= 3)
                     {

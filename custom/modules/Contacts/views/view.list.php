@@ -6,25 +6,6 @@ class CustomContactsViewList extends ViewList
 {
     
 
-    /*   
-   function listViewProcess()        // generating listview 
-    {
-
-        $prv = new PrvCloudMethods();
-        $p = $prv->listContainerRecords();
-        foreach ($p as $d)
-        {
-
-            $contacts = $prv->listRecords($d->guid);
-            //print_r( $contacts['record']->email);
-            $contactArr[$d->guid] = ["email" => $contacts['record']->email, 'first_name' => $contacts['record']->first_name,'last_name' => $contacts['record']->last_name,'phone_home' => $contacts['record']->phone_home];
-        }
-        $this->lv->ss->assign('total', count($contactArr));
-        $this->lv->ss->assign('contacts', $contactArr);
-      
-        $this->lv->setup($this->seed, 'custom/modules/Contacts/templates/list.tpl',$this->where, $this->params);
-        echo $this->lv->display();
-    }*/
     function listViewProcess()        // generating listview 
     {
         
@@ -70,13 +51,13 @@ class CustomContactsViewList extends ViewList
 
         }
         $endOffset = (floor(($totalCount - 1) / $limit)) * $limit;
-        //$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        
         $actual_link ="index.php?module=Contacts&action=ListView";
         if($nextOffset < $totalCount)
             $pageData['urls'] = array('nextPage'=>$actual_link."&nextp=".$nextOffset);
         if($prvOffset >=0  )
             $pageData['urls']['prevPage'] =$actual_link."&nextp=".$prvOffset;
-        $pageData['offsets'] = array( 'lastOffsetOnPage'=>$lastOffsetOnPage,'current'=>$offset, 'next'=>$nextOffset, 'prev'=>$prevOffset, 'end'=>$endOffset, 'total'=>$totalCount, 'totalCounted'=>$totalCounted);
+        $pageData['offsets'] = array( 'lastOffsetOnPage'=>$lastOffsetOnPage,'current'=>$offset, 'next'=>$nextOffset, 'prev'=>$prevOffset, 'end'=>$endOffset, 'total'=>$totalCount, 'totalCounted'=>$totalCount);
         /**Pag*/
 
         $this->lv->ss->assign('total', count( $allRecord));
