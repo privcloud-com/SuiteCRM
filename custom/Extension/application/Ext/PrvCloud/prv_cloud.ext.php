@@ -85,6 +85,7 @@ class PrvCloudMethods
                     }
                     else
                     {
+                        $GLOBALS["log"]->fatal("Record create/update error:" . var_export($response, true));
                         $this->RedirectBack($response['message']);
                     }
 
@@ -97,7 +98,7 @@ class PrvCloudMethods
                 }
                 else
                 {
-                   
+                    $GLOBALS["log"]->fatal("Record create/update error:" . var_export($response, true));
                     $this->RedirectBack($response['message']);
 
                 }
