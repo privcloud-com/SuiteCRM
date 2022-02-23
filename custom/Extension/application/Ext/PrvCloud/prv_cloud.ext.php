@@ -307,7 +307,7 @@ class PrvCloudMethods
         }
         else
         {
-            $GLOBALS["log"]->fatal($response['message']);
+            $GLOBALS["log"]->fatal(@$response['message']);
 
         }
     }
